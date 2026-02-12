@@ -122,3 +122,27 @@ export const generateCode = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Error generating code', error });
     }
 }
+
+export const getAthletes = async (req: Request, res: Response) => {
+    try {
+        // @ts-ignore
+        const userId = req.user.userId;
+
+        const coach = await User.findById(userId);
+        if (!coach || coach.role !== UserRole.COACH) {
+            return res.status(403).json({ message: 'Only coaches can view athletes' });
+        }
+
+        const codes = coach.generatedCodes?.map(c => c.code) || [];
+
+        const athletes = await User.find({
+            role: UserRole.ATHLETE,
+            redeemedCode: { $in: codes }
+        }).select('email role redeemedCode subscriptionExpiry');
+
+        res.json(athletes);
+
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching athletes', error });
+    }
+};
