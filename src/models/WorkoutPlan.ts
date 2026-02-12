@@ -8,6 +8,7 @@ const SessionSchema: Schema = new Schema({
         targetSets: { type: Number, required: true },
         targetReps: { type: String, required: true },
         targetRPE: { type: Number },
+        targetRIR: { type: Number },
         notes: { type: String },
     }]
 });

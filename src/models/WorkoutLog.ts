@@ -8,6 +8,7 @@ const ExerciseLogSchema: Schema = new Schema({
         weight: { type: Number, required: true },
         reps: { type: Number, required: true },
         rpe: { type: Number },
+        rir: { type: Number },
     }]
 });
 

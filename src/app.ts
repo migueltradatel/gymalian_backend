@@ -7,6 +7,7 @@ import exerciseRoutes from './routes/exerciseRoutes';
 import workoutPlanRoutes from './routes/workoutPlanRoutes';
 import workoutLogRoutes from './routes/workoutLogRoutes';
 import coachRoutes from './routes/coachRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/exercises', exerciseRoutes);
 app.use('/workouts', workoutPlanRoutes);
 app.use('/logs', workoutLogRoutes);
 app.use('/coach', coachRoutes);
+app.use('/notifications', notificationRoutes);
 
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });

@@ -132,3 +132,93 @@ export const getCoachPlans = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Error fetching plans', error });
     }
 };
+
+export const getVolumeHistory = async (req: Request, res: Response) => {
+    try {
+        // @ts-ignore
+        const userId = req.user.userId;
+        const coach = await User.findById(userId);
+        if (!coach || coach.role !== UserRole.COACH) {
+            return res.status(403).json({ message: 'Only coaches can view analytics' });
+        }
+
+        const codes = coach.generatedCodes?.map(c => c.code) || [];
+        const athleteIds = await User.find({ role: UserRole.ATHLETE, redeemedCode: { $in: codes } }).distinct('_id');
+
+        const fourteenDaysAgo = new Date();
+        fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+        fourteenDaysAgo.setHours(0, 0, 0, 0);
+
+        const volumeHistory = await WorkoutLog.aggregate([
+            {
+                $match: {
+                    athleteId: { $in: athleteIds },
+                    date: { $gte: fourteenDaysAgo }
+                }
+            },
+            // Fallback for older logs that might be missing totalVolume
+            {
+                $addFields: {
+                    computedVolume: {
+                        $reduce: {
+                            input: "$exercises",
+                            initialValue: 0,
+                            in: {
+                                $add: [
+                                    "$$value",
+                                    {
+                                        $reduce: {
+                                            input: "$$this.sets",
+                                            initialValue: 0,
+                                            in: { $add: ["$$value", { $multiply: [{ $ifNull: ["$$this.weight", 0] }, { $ifNull: ["$$this.reps", 0] }] }] }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+                    totalVolume: { $sum: { $cond: [{ $gt: ["$totalVolume", 0] }, "$totalVolume", "$computedVolume"] } }
+                }
+            },
+            { $sort: { "_id": 1 } }
+        ]);
+
+        console.log('Volume History Aggregated:', volumeHistory);
+        res.json(volumeHistory);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching volume history', error });
+    }
+};
+
+export const getCompletionRate = async (req: Request, res: Response) => {
+    try {
+        // @ts-ignore
+        const userId = req.user.userId;
+        const coach = await User.findById(userId);
+        if (!coach || coach.role !== UserRole.COACH) {
+            return res.status(403).json({ message: 'Only coaches can view analytics' });
+        }
+
+        const codes = coach.generatedCodes?.map(c => c.code) || [];
+        const athleteIds = await User.find({ role: UserRole.ATHLETE, redeemedCode: { $in: codes } }).distinct('_id');
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const loggedToday = await WorkoutLog.find({
+            athleteId: { $in: athleteIds },
+            date: { $gte: today }
+        }).distinct('athleteId');
+
+        const rate = athleteIds.length > 0 ? (loggedToday.length / athleteIds.length) * 100 : 0;
+
+        res.json({ rate });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching completion rate', error });
+    }
+};

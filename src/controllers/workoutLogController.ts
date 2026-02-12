@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
 import WorkoutLog from '../models/WorkoutLog';
+import User from '../models/User';
+import Notification from '../models/Notification';
+import { UserRole } from '../types';
 
 export const createWorkoutLog = async (req: Request, res: Response) => {
     try {
@@ -7,10 +10,13 @@ export const createWorkoutLog = async (req: Request, res: Response) => {
         const athleteId = req.user.userId;
         const { date, workoutPlanId, exercises, notes } = req.body;
 
+        const athlete = await User.findById(athleteId);
+        if (!athlete) return res.status(404).json({ message: 'Athlete not found' });
+
         let totalVolume = 0;
         exercises.forEach((ex: any) => {
             ex.sets.forEach((set: any) => {
-                totalVolume += (set.weight * set.reps);
+                totalVolume += (Number(set.weight) * Number(set.reps));
             });
         });
 
@@ -18,7 +24,7 @@ export const createWorkoutLog = async (req: Request, res: Response) => {
         let feedbackColor = 'YELLOW';
         const previousLog = await WorkoutLog.findOne({
             athleteId,
-            workoutPlanId // Compare against same plan execution if possible
+            workoutPlanId
         }).sort({ date: -1 });
 
         if (previousLog) {
@@ -40,6 +46,23 @@ export const createWorkoutLog = async (req: Request, res: Response) => {
         });
 
         await log.save();
+
+        // Trigger Notification for Coach
+        if (athlete.redeemedCode) {
+            const coach = await User.findOne({
+                role: UserRole.COACH,
+                'generatedCodes.code': athlete.redeemedCode
+            });
+
+            if (coach) {
+                await Notification.create({
+                    userId: (coach as any)._id,
+                    type: 'WORKOUT_COMPLETE',
+                    message: `Athlete ${athlete.email} completed a workout! Volume: ${totalVolume}kg.`,
+                });
+            }
+        }
+
         res.status(201).json(log);
     } catch (error) {
         res.status(400).json({ message: 'Error creating workout log', error });
@@ -50,7 +73,6 @@ export const getWorkoutLogs = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
         const athleteId = req.user.userId;
-        // can add filtering by date range
         const logs = await WorkoutLog.find({ athleteId }).sort({ date: -1 }).populate('exercises.exerciseId');
         res.json(logs);
     } catch (error) {
