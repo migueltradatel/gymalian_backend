@@ -49,6 +49,13 @@ export interface IWorkoutSession {
         targetReps: string; // e.g. "8-12"
         targetRPE?: number;
         notes?: string;
+        lastPerformance?: {
+            weight: string;
+            reps: string;
+            rpe: string;
+            setsCount: number;
+            volume: number;
+        };
     }[];
 }
 

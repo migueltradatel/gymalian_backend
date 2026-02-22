@@ -41,12 +41,55 @@ export const getWorkoutPlans = async (req: Request, res: Response) => {
     }
 };
 
+import WorkoutLog from '../models/WorkoutLog';
+
 export const getWorkoutPlanById = async (req: Request, res: Response) => {
     try {
+        // @ts-ignore
+        const currentUserId = (req as any).user.userId;
         const plan = await WorkoutPlan.findById(req.params.id).populate('sessions.exercises.exerciseId');
         if (!plan) return res.status(404).json({ message: 'Plan not found' });
-        res.json(plan);
+
+        const planObj = plan.toObject();
+        // Use the athlete associated with the plan if it's an athlete's plan, otherwise the current user
+        const targetAthleteId = plan.athleteId || currentUserId;
+
+        for (const session of planObj.sessions) {
+            for (const ex of session.exercises) {
+                if (!ex.exerciseId) continue;
+
+                // ex.exerciseId could be populated (object) or not (ID)
+                const exerciseId = (ex.exerciseId as any)._id || ex.exerciseId;
+
+                const lastLog = await WorkoutLog.findOne({
+                    athleteId: targetAthleteId,
+                    exercises: {
+                        $elemMatch: {
+                            exerciseId: exerciseId,
+                            sets: { $not: { $size: 0 } }
+                        }
+                    }
+                }).sort({ date: -1 });
+
+                if (lastLog) {
+                    const exLog = lastLog.exercises.find((e: any) => e.exerciseId.toString() === exerciseId.toString());
+                    if (exLog) {
+                        const volume = exLog.sets.reduce((sum: number, s: any) => sum + (Number(s.weight || 0) * Number(s.reps || 0)), 0);
+                        ex.lastPerformance = {
+                            weight: exLog.sets.map((s: any) => s.weight).join('-'),
+                            reps: exLog.sets.map((s: any) => s.reps).join('-'),
+                            rpe: exLog.sets.map((s: any) => s.rpe || '-').join('-'),
+                            setsCount: exLog.sets.length,
+                            volume: volume
+                        };
+                    }
+                }
+            }
+        }
+
+        res.json(planObj);
     } catch (error) {
+        console.error('Error fetching plan with history:', error);
         res.status(500).json({ message: 'Error fetching plan', error });
     }
 };

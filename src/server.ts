@@ -4,7 +4,7 @@ dotenv.config();
 import app from './app';
 import mongoose from 'mongoose';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3004;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/trainer-platform';
 
 mongoose.connect(MONGO_URI)
