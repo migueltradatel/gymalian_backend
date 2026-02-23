@@ -7,21 +7,23 @@ Trabajo de Fin de Máster en Desarrollo con Inteligencia Artificial BigSchool
 Autor: Miguel Ángel Moreno Caro
        ma.moreno.caro@gmail.com
 
+## URL de Acceso a la aplicación:
+
+- [Gymalian](http://gymalian.duckdns.org/)
+
+    Coach: coach.ma@gmail.com
+    Contraseña: 2021
+    
+    Atleta: atleta.go@gmail.com
+    Contraseña: 2022
+
+    Atleta: atleta.sa@gmail.com
+    Contraseña: 2023
+
+
 ## Aclaraciones: 
-    1. Para cualquier duda o aclaración, no dude en contactar a mi email. Si fuera necesario, puedo proporcionar credenciales de acceso a la base de datos de MongoDB.
-    2. Para acceso a la aplicación, se puede utilizar estos usuario de prueba:
-
-        URL de Acceso a la aplicación en producción: [Gymalian](http://gymalian.duckdns.org/)
-        
-         Coach: coach.ma@gmail.com
-         Contraseña: 2021
-         
-         Atleta: atleta.go@gmail.com
-         Contraseña: 2022
-
-         Atleta: atleta.sa@gmail.com
-         Contraseña: 2023
-
+    1. Para cualquier duda o aclaración, no dude en contactar a mi email ma.moreno.caro@gmail.com
+    2. Si fuera necesario, se puede proporcionar credenciales de acceso a la base de datos de MongoDB.
 
 ## Informacón de repositorios.
 Este proyecto consta de dos repositorios correspondientes a cada uno de los monolitos del sistema.
