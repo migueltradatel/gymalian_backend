@@ -3,6 +3,10 @@ import { createWorkoutPlan, getWorkoutPlans, getWorkoutPlanById, updateWorkoutPl
 import { authenticate, authorizeRole } from '../middleware/authMiddleware';
 import { UserRole } from '../types';
 
+/**
+ * Definición de las rutas para la gestión de planes de entrenamiento.
+ * Permite a los entrenadores crear y editar planes, y a los atletas consultarlos.
+ */
 const router = express.Router();
 
 router.post('/', authenticate, authorizeRole([UserRole.COACH]), createWorkoutPlan);

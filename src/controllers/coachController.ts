@@ -4,6 +4,14 @@ import WorkoutPlan from '../models/WorkoutPlan';
 import WorkoutLog from '../models/WorkoutLog';
 import { UserRole } from '../types';
 
+/**
+ * Obtiene las estadísticas del panel para el entrenador autenticado.
+ * Incluye el recuento de atletas, el recuento de planes, los entrenamientos completados hoy y la actividad reciente.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getDashboardStats = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -65,6 +73,14 @@ export const getDashboardStats = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Obtiene información detallada de un atleta específico asignado al entrenador.
+ * Devuelve información básica del atleta, sus planes de entrenamiento y registros de entrenamiento recientes.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene athleteId en los parámetros.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getAthleteDetails = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -112,6 +128,13 @@ export const getAthleteDetails = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Obtiene todos los planes de entrenamiento creados por el entrenador autenticado.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getCoachPlans = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -133,6 +156,14 @@ export const getCoachPlans = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Obtiene el historial de volumen de entrenamiento para todos los atletas asignados al entrenador.
+ * Los datos se agregan diariamente durante los últimos 14 días.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getVolumeHistory = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -195,6 +226,13 @@ export const getVolumeHistory = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Calcula la tasa de finalización de entrenamientos para hoy entre todos los atletas del entrenador.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getCompletionRate = async (req: Request, res: Response) => {
     try {
         // @ts-ignore

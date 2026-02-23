@@ -6,6 +6,15 @@ import { UserRole } from '../types';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret_key';
 
+/**
+ * Registra un nuevo usuario en el sistema.
+ * 
+ * Gestiona el registro de atletas y entrenadores, validando códigos de acceso
+ * para los atletas y cifrando las contraseñas.
+ * 
+ * @param req - Objeto de solicitud de Express que contiene email, password, role y código opcional.
+ * @param res - Objeto de respuesta de Express.
+ */
 export const register = async (req: Request, res: Response) => {
     try {
         const { email, password, role, code } = req.body;
@@ -74,6 +83,15 @@ export const register = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Inicia sesión de un usuario existente.
+ * 
+ * Valida las credenciales (email y contraseña) y devuelve un token JWT
+ * si la autenticación es exitosa.
+ * 
+ * @param req - Objeto de solicitud de Express con las credenciales.
+ * @param res - Objeto de respuesta de Express.
+ */
 export const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
@@ -97,6 +115,14 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // Only for coaches
+/**
+ * Genera un nuevo código de acceso para atletas.
+ * 
+ * Esta acción solo puede ser realizada por usuarios con rol de ENTRENADOR.
+ * 
+ * @param req - Objeto de solicitud de Express con el código y su duración.
+ * @param res - Objeto de respuesta de Express.
+ */
 export const generateCode = async (req: Request, res: Response) => {
     // Expects req.user from middleware
     try {
@@ -123,6 +149,14 @@ export const generateCode = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Obtiene la lista de atletas asociados a un entrenador.
+ * 
+ * Devuelve los atletas que han canjeado códigos generados por el entrenador solicitante.
+ * 
+ * @param req - Objeto de solicitud de Express.
+ * @param res - Objeto de respuesta de Express.
+ */
 export const getAthletes = async (req: Request, res: Response) => {
     try {
         // @ts-ignore

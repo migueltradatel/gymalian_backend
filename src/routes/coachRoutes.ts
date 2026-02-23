@@ -9,6 +9,10 @@ import {
 import { authenticate, authorizeRole } from '../middleware/authMiddleware';
 import { UserRole } from '../types';
 
+/**
+ * Definición de las rutas exclusivas para entrenadores.
+ * Permite acceder a estadísticas, detalles de atletas, planes del entrenador y analíticas.
+ */
 const router = express.Router();
 
 router.get('/stats', authenticate, authorizeRole([UserRole.COACH]), getDashboardStats);

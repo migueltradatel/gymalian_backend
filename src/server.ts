@@ -1,6 +1,11 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+/**
+ * Punto de entrada principal del servidor.
+ * Se encarga de cargar las variables de entorno, conectar con la base de datos (MongoDB)
+ * e iniciar la escucha de peticiones HTTP.
+ */
 import app from './app';
 import mongoose from 'mongoose';
 

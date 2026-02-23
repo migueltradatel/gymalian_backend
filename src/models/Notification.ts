@@ -8,6 +8,10 @@ export interface INotification extends Document {
     createdAt: Date;
 }
 
+/**
+ * Esquema de Mongoose para el modelo de Notificación.
+ * Almacena las notificaciones dirigidas a los usuarios (entrenadores o atletas).
+ */
 const NotificationSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     type: { type: String, required: true },

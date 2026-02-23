@@ -3,6 +3,10 @@ import { register, login, generateCode, getAthletes } from '../controllers/authC
 import { authenticate, authorizeRole } from '../middleware/authMiddleware';
 import { UserRole } from '../types';
 
+/**
+ * Definición de las rutas de autenticación.
+ * Gestiona el registro, inicio de sesión, generación de códigos y obtención de atletas.
+ */
 const router = express.Router();
 
 router.post('/register', register);

@@ -4,6 +4,15 @@ import User from '../models/User';
 import Notification from '../models/Notification';
 import { UserRole } from '../types';
 
+/**
+ * Crea un nuevo registro de entrenamiento (Workout Log).
+ * Calcula el volumen total, compara con el registro anterior para dar feedback visual (color)
+ * y notifica al entrenador si el atleta tiene un código canjeado.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express con los datos del entrenamiento en el cuerpo.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const createWorkoutLog = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -69,6 +78,14 @@ export const createWorkoutLog = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Obtiene todos los registros de entrenamiento del atleta autenticado.
+ * Los registros se devuelven ordenados por fecha descendente y con los ejercicios poblados.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getWorkoutLogs = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -80,6 +97,13 @@ export const getWorkoutLogs = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Obtiene un registro de entrenamiento específico por su ID único.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express con el ID del registro en los parámetros.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getWorkoutLogById = async (req: Request, res: Response) => {
     try {
         const log = await WorkoutLog.findById(req.params.id).populate('exercises.exerciseId');

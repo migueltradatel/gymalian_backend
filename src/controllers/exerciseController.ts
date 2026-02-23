@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
 import Exercise from '../models/Exercise';
 
+/**
+ * Crea un nuevo ejercicio en la base de datos.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene los detalles del ejercicio en el cuerpo.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const createExercise = async (req: Request, res: Response) => {
     try {
         const exercise = new Exercise(req.body);
@@ -11,6 +18,13 @@ export const createExercise = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Obtiene todos los ejercicios disponibles de la base de datos.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getExercises = async (req: Request, res: Response) => {
     try {
         const exercises = await Exercise.find();
@@ -20,6 +34,13 @@ export const getExercises = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Obtiene un solo ejercicio por su ID único.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene el ID del ejercicio en los parámetros.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getExerciseById = async (req: Request, res: Response) => {
     try {
         const exercise = await Exercise.findById(req.params.id);
@@ -30,6 +51,13 @@ export const getExerciseById = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Actualiza un ejercicio existente por su ID único.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene el ID del ejercicio en los parámetros y las actualizaciones en el cuerpo.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const updateExercise = async (req: Request, res: Response) => {
     try {
         const exercise = await Exercise.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -40,6 +68,13 @@ export const updateExercise = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Elimina un ejercicio de la base de datos por su ID único.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene el ID del ejercicio en los parámetros.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const deleteExercise = async (req: Request, res: Response) => {
     try {
         const exercise = await Exercise.findByIdAndDelete(req.params.id);

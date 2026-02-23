@@ -1,3 +1,7 @@
+/**
+ * Configuración principal de la aplicación Express.
+ * Define middlewares globales, rutas de la API y manejadores de errores básicos.
+ */
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -23,6 +27,12 @@ app.use('/logs', workoutLogRoutes);
 app.use('/coach', coachRoutes);
 app.use('/notifications', notificationRoutes);
 
+/**
+ * Endpoint de salud (Health Check) para verificar que el servidor responde.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ */
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
 });

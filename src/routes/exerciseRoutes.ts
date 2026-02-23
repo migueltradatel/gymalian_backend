@@ -3,6 +3,10 @@ import { createExercise, getExercises, getExerciseById, updateExercise, deleteEx
 import { authenticate, authorizeRole } from '../middleware/authMiddleware';
 import { UserRole } from '../types';
 
+/**
+ * Definición de las rutas para la gestión de ejercicios.
+ * Permite a los usuarios autenticados consultar ejercicios y a los entrenadores gestionarlos (CRUD).
+ */
 const router = express.Router();
 
 // Publicly readable or Authenticated? authenticated seems better.

@@ -2,6 +2,14 @@ import { Request, Response } from 'express';
 import WorkoutPlan from '../models/WorkoutPlan';
 import { UserRole } from '../types';
 
+/**
+ * Crea un nuevo plan de entrenamiento para un atleta.
+ * Diseñado para ser llamado por un entrenador.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene nombre, athleteId y sesiones en el cuerpo.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const createWorkoutPlan = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -22,6 +30,15 @@ export const createWorkoutPlan = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Obtiene todos los planes de entrenamiento asociados con el usuario autenticado.
+ * Si el usuario es un entrenador, devuelve los planes que creó.
+ * Si el usuario es un atleta, devuelve los planes asignados a él.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getWorkoutPlans = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -43,6 +60,15 @@ export const getWorkoutPlans = async (req: Request, res: Response) => {
 
 import WorkoutLog from '../models/WorkoutLog';
 
+/**
+ * Obtiene un solo plan de entrenamiento por su ID único.
+ * Enriquece los ejercicios del plan con los datos del último rendimiento (peso, repeticiones, rpe)
+ * registrados por el atleta para esos ejercicios específicos.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene el ID del plan en los parámetros.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getWorkoutPlanById = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -94,6 +120,13 @@ export const getWorkoutPlanById = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Actualiza un plan de entrenamiento existente por su ID único.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene el ID del plan en los parámetros y las actualizaciones en el cuerpo.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const updateWorkoutPlan = async (req: Request, res: Response) => {
     try {
         const plan = await WorkoutPlan.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -104,6 +137,13 @@ export const updateWorkoutPlan = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Elimina un plan de entrenamiento de la base de datos por su ID único.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene el ID del plan en los parámetros.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const deleteWorkoutPlan = async (req: Request, res: Response) => {
     try {
         const plan = await WorkoutPlan.findByIdAndDelete(req.params.id);

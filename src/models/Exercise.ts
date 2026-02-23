@@ -1,6 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { IExercise } from '../types';
 
+/**
+ * Esquema de Mongoose para el modelo de Ejercicio.
+ * Define la estructura de los ejercicios que pueden ser incluidos en los planes de entrenamiento.
+ */
 const ExerciseSchema: Schema = new Schema({
     name: { type: String, required: true },
     muscleGroup: { type: String, required: true },

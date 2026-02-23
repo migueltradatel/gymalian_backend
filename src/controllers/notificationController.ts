@@ -1,6 +1,14 @@
 import { Request, Response } from 'express';
 import Notification from '../models/Notification';
 
+/**
+ * Obtiene las últimas notificaciones para el usuario autenticado.
+ * Devuelve hasta 20 notificaciones ordenadas por fecha de creación (las más nuevas primero).
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const getNotifications = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
@@ -12,6 +20,13 @@ export const getNotifications = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Marca una notificación específica como leída por su ID único.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express que contiene el ID de la notificación en los parámetros.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const markAsRead = async (req: Request, res: Response) => {
     try {
         await Notification.findByIdAndUpdate(req.params.id, { read: true });
@@ -21,6 +36,13 @@ export const markAsRead = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Marca todas las notificaciones no leídas para el usuario autenticado como leídas.
+ * 
+ * @param {Request} req - Objeto de solicitud de Express.
+ * @param {Response} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 export const markAllAsRead = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
